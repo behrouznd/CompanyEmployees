@@ -1,6 +1,8 @@
-﻿using Contracts.Interfaces;
+﻿using AutoMapper;
+using Contracts.Interfaces;
 using Entities.Models;
 using Service.Contracts.Interfaces;
+using Shared.DataTransferObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,27 +15,34 @@ namespace Service.Services
     {
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
-
+        private readonly IMapper _mapper;
         public CompanyService(IRepositoryManager repositoryManager,
-            ILoggerManager loggerManager)
+            ILoggerManager loggerManager,
+            IMapper mapper)
         {
             _logger = loggerManager;
             _repository = repositoryManager; 
+            _mapper = mapper;
         }
 
-        public IEnumerable<Company> GetAllCompanies(bool trackChanges)
+        public IEnumerable<CompanyDto> GetAllCompanies(bool trackChanges)
         {
-            try
-            {
+            //try
+            //{
                 var companies = _repository.CompanyRepository.GetAllCompanies(trackChanges);
-                return companies;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Something went wrong in the {nameof(GetAllCompanies)} service method {ex}");
+                //var conpaniesDto = companies.Select(c =>
+                //     new CompanyDto(c.Id, c.Name ?? "", String.Join(' ', c.Country, c.Address))).ToList();
 
-                throw;
-            }
+                var conpaniesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+
+                return conpaniesDto;
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.LogError($"Something went wrong in the {nameof(GetAllCompanies)} service method {ex}");
+
+            //    throw;
+            //}
         }
     }
 }
