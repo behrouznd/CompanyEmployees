@@ -20,6 +20,8 @@ namespace CompanyEmployees.Presentation.Controllers
         {
             //try
             //{
+            //throw new Exception("Exception");
+
                 var companies = _service.CompanyService.GetAllCompanies(trackChanges: false);
                 return Ok(companies);
             //}
@@ -28,6 +30,14 @@ namespace CompanyEmployees.Presentation.Controllers
 
             //    return StatusCode(500, "Internal server error");
             //}
+        }
+
+        [HttpGet("{id:guid}")]
+        public IActionResult GetCompany(Guid id)
+        {
+            var company = _service.CompanyService.GetCompany(id, false);
+            
+            return Ok(company);
         }
     }
 }

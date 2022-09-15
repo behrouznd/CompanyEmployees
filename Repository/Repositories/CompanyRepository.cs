@@ -15,6 +15,11 @@ namespace Repository.Repositories
             FindAll(trackChanges)
                 .OrderBy(c=> c.Name)
                 .ToList();
+
+        public Company GetCompany(Guid CompanyId, bool trackChanges)=>
+            FindByCondition(c=>c.Id.Equals(CompanyId), trackChanges)
+                .SingleOrDefault();
+
          
     }
 }

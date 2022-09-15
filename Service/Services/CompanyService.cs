@@ -33,7 +33,7 @@ namespace Service.Services
                 //var conpaniesDto = companies.Select(c =>
                 //     new CompanyDto(c.Id, c.Name ?? "", String.Join(' ', c.Country, c.Address))).ToList();
 
-                var conpaniesDto = _mapper.Map<IEnumerable<CompanyDto>>(companies);
+                var conpaniesDto = _mapper.Map<IEnumerable<Shared.DataTransferObjects.CompanyDto>>(companies);
 
                 return conpaniesDto;
             //}
@@ -43,6 +43,14 @@ namespace Service.Services
 
             //    throw;
             //}
+        }
+
+        public CompanyDto GetCompany(Guid id, bool trackChanges)
+        {
+            var company = _repository.CompanyRepository.GetCompany(id, trackChanges);
+            var companyDto = _mapper.Map<CompanyDto>(company);
+
+            return companyDto;
         }
     }
 }
