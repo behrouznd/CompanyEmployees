@@ -7,9 +7,8 @@ namespace Repository.Repositories
     {
 
         public CompanyRepository(RepositoryContext repositoryContext) : base(repositoryContext)
-        {
+        {}
 
-        }
 
         public IEnumerable<Company> GetAllCompanies(bool trackChanges)=>
             FindAll(trackChanges)
@@ -20,6 +19,12 @@ namespace Repository.Repositories
             FindByCondition(c=>c.Id.Equals(CompanyId), trackChanges)
                 .SingleOrDefault();
 
-         
+        public void CreateCompany(Company company) => Create(company);
+
+        public IEnumerable<Company> GetByIds(IEnumerable<Guid> ids, bool trackChanges) =>
+             FindByCondition(x => ids.Contains(x.Id), trackChanges)
+             .ToList();
+
+        public void DeleteCompany(Company company) => Delete(company);
     }
 }

@@ -6,6 +6,10 @@ namespace Contracts.Interfaces
     {
         IEnumerable<Company> GetAllCompanies(bool trackChanges);
         Company GetCompany(Guid CompanyId , bool trackChanges);
+        void CreateCompany(Company company);
 
+        IEnumerable<Company> GetByIds(IEnumerable<Guid> ids, bool trackChanges);
+
+        void DeleteCompany(Company company);
     }
 }
