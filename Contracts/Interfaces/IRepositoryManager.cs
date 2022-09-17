@@ -11,6 +11,6 @@ namespace Contracts.Interfaces
         ICompanyRepository CompanyRepository { get; }
         IEmployeeRepository EmployeeRepository { get; }
 
-        void Save();
+        Task SaveAsync();
     }
 }

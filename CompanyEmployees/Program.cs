@@ -5,6 +5,7 @@ using Contracts.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Options;
+using CompanyEmployees.Presentation.ActionFilters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ new ServiceCollection().AddLogging().AddMvc().AddNewtonsoftJson()
 .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
 .OfType<NewtonsoftJsonPatchInputFormatter>().First();
 
+builder.Services.AddScoped<ValidationFilterAttribute>();
 
 builder.Services.AddControllers(config =>
 {
