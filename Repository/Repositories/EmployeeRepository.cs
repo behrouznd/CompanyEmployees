@@ -1,6 +1,7 @@
 ﻿using Contracts.Interfaces;
 using Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Repository.Extensions;
 using Shared.RequestFeatures;
 
 namespace Repository.Repositories
@@ -20,9 +21,9 @@ namespace Repository.Repositories
             EmployeeParameters employeeParameters,
             bool trackChanges)
         {
-            var employees = await FindByCondition(x => x.CompanyId.Equals(companyId)
-                && (x.Age >= employeeParameters.MinAge && x.Age <= employeeParameters.MaxAge)
-                , trackChanges)
+            var employees = await FindByCondition(x => x.CompanyId.Equals(companyId) , trackChanges)
+                .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+                .Search(employeeParameters.SearchTerm)
                 .OrderBy(x => x.Name)
                 .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
                 .Take(employeeParameters.PageSize)
