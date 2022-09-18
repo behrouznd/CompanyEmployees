@@ -5,6 +5,7 @@ using Entities.Models;
 using Service.Contracts.Interfaces;
 using Shared.DataTransferObjects;
 using Shared.RequestFeatures;
+using System.Dynamic;
 
 namespace Service.Services
 {
@@ -13,16 +14,20 @@ namespace Service.Services
         private readonly IRepositoryManager _repository;
         private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<EmployeeDto> _dataShaper;
+
         public EmployeeService(IRepositoryManager repositoryManager,
             ILoggerManager loggerManager,
-            IMapper mapper)
+            IMapper mapper,
+            IDataShaper<EmployeeDto> dataShaper)
         {
             _repository= repositoryManager;
             _logger = loggerManager;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
 
-        public async Task<(IEnumerable<EmployeeDto> employees, MetaData metaData)> GetEmployeesAsync
+        public async Task<(IEnumerable<ExpandoObject> employees, MetaData metaData)> GetEmployeesAsync
             (Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
         {
             if (!employeeParameters.ValidAgeRange)
@@ -32,8 +37,13 @@ namespace Service.Services
             await CheckIfCompanyExists(companyId, trackChanges);
             var employeesWithMetaData = await _repository.EmployeeRepository.GetEmployeesAsync(companyId, 
                 employeeParameters, trackChanges);
-            var employeesDto =  _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
-            return (employees: employeesDto, metaData: employeesWithMetaData.MetaData);
+             
+           
+            var employeesDto = _mapper.Map<IEnumerable<EmployeeDto>>(employeesWithMetaData);
+            var shapedData = _dataShaper.ShapeData(employeesDto, employeeParameters.Fields);
+            return (employees: shapedData, metaData: employeesWithMetaData.MetaData);
+
+
         }
 
 
