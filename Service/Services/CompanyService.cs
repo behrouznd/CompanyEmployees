@@ -101,7 +101,7 @@ namespace Service.Services
         }
 
 
-        public async Task DeleteCompany(Guid companyId, bool trackChanges)
+        public async Task DeleteCompanyAsync(Guid companyId, bool trackChanges)
         {
             var companyEntity = await GetCompanyAndCheckIfItExists(companyId, trackChanges);
 
@@ -109,7 +109,7 @@ namespace Service.Services
             await _repository.SaveAsync();
         }
 
-        public async Task UpdateCompany(Guid companyId, CompanyForUpdateDto companyForUpdate, bool trackChanges)
+        public async Task UpdateCompanyAsync(Guid companyId, CompanyForUpdateDto companyForUpdate, bool trackChanges)
         {
             var companyEntity = await GetCompanyAndCheckIfItExists(companyId, trackChanges);
 
@@ -125,6 +125,14 @@ namespace Service.Services
                 throw new CompanyNotFoundException(id);
             return company;
         }
+
+        public Task<(IEnumerable<CompanyDto> companies, string ids)> CreateCompanyCollectionAsync(IEnumerable<CompanyForCreationDto> companyCollection)
+        {
+            throw new NotImplementedException();
+        }
+
+        
+ 
     }
 
 }
