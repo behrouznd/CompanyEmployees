@@ -20,7 +20,9 @@ namespace Repository.Repositories
             EmployeeParameters employeeParameters,
             bool trackChanges)
         {
-            var employees = await FindByCondition(x => x.CompanyId.Equals(companyId), trackChanges)
+            var employees = await FindByCondition(x => x.CompanyId.Equals(companyId)
+                && (x.Age >= employeeParameters.MinAge && x.Age <= employeeParameters.MaxAge)
+                , trackChanges)
                 .OrderBy(x => x.Name)
                 .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
                 .Take(employeeParameters.PageSize)
