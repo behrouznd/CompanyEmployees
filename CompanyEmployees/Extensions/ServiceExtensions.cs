@@ -1,7 +1,9 @@
-﻿using Contracts.Interfaces;
+﻿using CompanyEmployees.Presentation.Controllers;
+using Contracts.Interfaces;
 using LoggerService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Repository;
 using Service.Contracts.Interfaces;
@@ -81,6 +83,12 @@ namespace CompanyEmployees.Extensions
                 opt.ReportApiVersions = true;
                 opt.AssumeDefaultVersionWhenUnspecified = true;
                 opt.DefaultApiVersion = new ApiVersion(1, 0);
+                opt.ApiVersionReader = new HeaderApiVersionReader("api-version");
+                //opt.ApiVersionReader = new QueryStringApiVersionReader("api-version");
+
+                opt.Conventions.Controller<CompaniesController>()
+                    .HasApiVersion(new ApiVersion(1, 0));
+
             });
         }
 
