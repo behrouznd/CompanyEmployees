@@ -15,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
 
 builder.Services.ConfigureCors();
+builder.Services.ConfigureResponseCaching();
+builder.Services.ConfigureHttpCacheHeaders();
 builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigurationLoggerService();
 builder.Services.ConfigurationRepositoryManager();
@@ -22,6 +24,7 @@ builder.Services.ConfigurationServiceManager();
 builder.Services.ConfigurationSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ConfigureVersioning();
+
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -39,6 +42,8 @@ builder.Services.AddControllers(config =>
 	config.RespectBrowserAcceptHeader = true;
 	config.ReturnHttpNotAcceptable = true;
 	config.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+	config.CacheProfiles.Add("120SecondsDuration", new CacheProfile{Duration =120});
+
 }).AddXmlDataContractSerializerFormatters()
   .AddCustomCSVFormatter()
   .AddApplicationPart(typeof(CompanyEmployees.Presentation.AssemblyReference).Assembly);
@@ -65,6 +70,8 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.All
 });
 app.UseCors("CorsPolicy");
+app.UseResponseCaching();
+app.UseHttpCacheHeaders();
 
 app.UseAuthorization();
 
