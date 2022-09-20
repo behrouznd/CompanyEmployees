@@ -24,7 +24,7 @@ builder.Services.ConfigurationServiceManager();
 builder.Services.ConfigurationSqlContext(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.ConfigureVersioning();
-
+builder.Services.AddMemoryCache();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
